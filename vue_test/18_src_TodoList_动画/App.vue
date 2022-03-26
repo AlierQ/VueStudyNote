@@ -5,7 +5,7 @@
                 <!-- 两种添加数据的方法：
                     第一种是将数据直接传入子组件进行添加  :todos='todos' 传入对象数组 (违背原则修改了props中的数据)
                 
-                    第二种是用函数将子组件中的数据传出来进行添加  :addTodo='addTodo' 传入一个方法
+                    第二种是用函数将子组件中的数据传出来进行添加  :addTodo='addTodo' 传入一个方法。
                 -->
                 <TodoHeader 
                     @addTodo='addTodo'

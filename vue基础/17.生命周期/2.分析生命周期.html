@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>当前的n值是:{{n}}</h2>
+        <button @click="add">点我n+1</button><br><br>
+        <button @click="bye">点我销毁</button>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    new Vue({
+        el:'#root',
+        // 可以使用template解析成容器
+        // 并且在使用template的时候要用最外层只能留一个标签(即只能有一个根节点)
+        // 一行写法
+        // template:'<h2>当前的n值是:{{n}}</h2><button @click="add">点我n+1</button>',
+        // 多行写法 (es6中的写法)
+        // template:`
+        //     <div>
+        //         <!--template标签不能作为根标签-->
+        //         <template></template>
+        //         <h2>当前的n值是:{{n}}</h2>
+        //         <button @click="add">点我n+1</button>
+        //     </div>`,
+        data:{
+            n:1
+        },
+        methods: {
+            add(){
+                console.log('add');
+                this.n++;
+            },
+            bye(){
+                console.log('bye被调用');         
+                this.$destroy()  //销毁vm
+                // 虽然vm被销毁,但是页面中的东西仍然存在
+                // $destroy()方法
+                // 完全销毁一个实例,清理它与其他实例的链接,解绑它的全部指令及事件监听器(这里的事件是自定义事件)
+                // vm销毁之后有@click调用的add不会被删除,因为不输入自定义事件
+            }
+        },
+        beforeCreate(){
+            console.log('beforeCreate');
+            // this仍然是vm,但是这里的vm是没有进行数据代理的也就是data中的数据是没有被传入到_data中的
+            // console.log(this);
+            // 断点
+            // debugger; 
+        },
+        created(){
+            // 数据监测 数据代理已经完成
+            console.log('created');
+            // console.log(this);
+            // debugger;
+        },
+        beforeMount() {
+            // Vue已经开始解析模板生成虚拟Dom,此时页面还不能显示解析好的内容
+            console.log('beforeMount');
+            // console.log(this);
+            // debugger;
+        },
+        mounted() {
+            // 此时页面呈现的是经过Vue编译过的Dom
+            // 此时对Dom的操作均是有效的,但是要尽可能避免
+            // 至此初始化过程已经结束
+            // 一般在此进行:
+            // 开启定时器  发送网络请求  订阅消息  绑定自定义事件等初始化操作
+            console.log('mounted');
+            // debugger
+        },
+        beforeUpdate(){
+            // 当数据发生改变的时候,调用beforeUpdate函数
+            console.log('beforeUpdate');
+            // 数据变了,但是页面还没有改变
+            // console.log(this.n);
+            // debugger
+        },
+        updated(){
+            // 数据已经和页面保持同步
+            // 数据更新了 页面也更新了
+            console.log('updated');
+            // debugger
+        },
+        beforeDestroy(){
+            console.log('beforeDestroy');
+            console.log(this.n);
+            // add能够调用,但是n的数值并不会变 
+            // 对数据的修改不会再触发更新了,当然destroyed钩子中也不会起作用
+            this.add()
+        },
+        destroyed() {
+            console.log('destroyed');
+        },
+    });
+</script>
+</html>

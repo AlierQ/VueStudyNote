@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../../dayjs.min.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>显示格式化后的时间</h2>
+        <h3>现在是：{{time}}</h3>
+        <!-- 计算属性实现 -->
+        <h3>计算属性实现：{{fmtTime}}</h3>
+        <!-- methods方法实现 -->
+        <!-- 要调用methods的方法需要加上小括号 -->
+        <h3>methods方法实现：{{getFmtTime()}}</h3>
+        <!-- 过滤器实现 -->
+        <h3>过滤器实现：{{time | timeFormater}}</h3>
+        <!-- 过滤器多参数 -->
+        <h3>过滤器实现：{{time | timeFormater2('YYYY_MM_DD')}}</h3>
+        <!-- 过滤器串联 -->
+        <h3>过滤器实现：{{time | timeFormater2('YYYY_MM_DD') | myslice}}</h3>
+
+
+        <!-- 过滤器也可以用在属性中 -->
+        <h3 v-bind:x="msg | myslice">啦啦啦</h3>
+    </div>
+    <div id="root2">
+        <h2>{{msg | myslice}}</h2>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    // 全局过滤器 (一个一个定义)
+    //写在new Vue之前
+    Vue.filter('myslice',function(value){
+        return value.slice(0,4) // 截取前4位
+    })
+
+    new Vue({
+        el:'#root',
+        data:{
+            time:1647480596134,   //时间戳
+            msg:'你好，世界'
+        },
+        computed:{
+            fmtTime(){
+                // dayjs不传参数就以当前时间进行转换
+                return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+            }
+        },
+        methods: {
+            getFmtTime(){
+                return dayjs(this.time).format('YYYY年MM月DD日 HH:mm:ss')
+            }
+        },
+        // 过滤器
+        filters:{
+            // 局部过滤器
+            // 可以定义多个过滤器
+
+            // timeFormater:function(){
+            // 简写方式
+            // 默认加工管道线之前的数据  data | filter
+            timeFormater(value){
+                return dayjs(value).format('YYYY年MM月DD日 HH:mm:ss')
+            },
+            // 第一个参数永远是管道线之前的数据，后面的参数可以自定义变量进行接收
+            // es6特性，形参默认值，当formatText没有被传入参数的时候就使用默认值
+            timeFormater2(value,formatText='YYYY年MM月DD日 HH:mm:ss'){
+                console.log(value);
+                console.log(formatText);
+                return dayjs(value).format(formatText + ' HH:mm:ss')
+            },
+            // myslice(value){
+            //     return value.slice(0,4) // 截取前4位
+            // }
+        }
+    });
+
+    new Vue({
+        el:'#root2',
+        data:{
+            msg:'hello'
+        }
+    });
+</script>
+</html>

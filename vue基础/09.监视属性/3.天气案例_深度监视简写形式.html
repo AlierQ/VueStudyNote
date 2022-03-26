@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气案例_深度监视简写形式</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>今天天气很{{info}}</h2>
+        <button @click="changeWeather">切换天气</button>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            isHot:true,
+            numbers:{
+                a:1,
+                b:1
+            }
+        },
+        computed:{
+            info(){
+                return this.isHot? '炎热' : '凉爽'
+            }
+        },
+        methods: {
+            changeWeather(){
+                this.isHot = !this.isHot;
+            }  
+        },
+        watch:{
+            // 完整写法
+            // isHot:{
+            //     // immediate:true, //初始化时让handler调用一下
+            //     handler(newValue,oldValue){
+            //         console.log('isHot被修改了',newValue,oldValue);
+            //     }
+            // }
+            // 监视的简写
+            // 函数名是监视的对象
+            isHot(newValue,oldValue){
+                console.log('isHot被修改了',newValue,oldValue);
+            }
+        }
+        
+    });
+    // 完整写法
+    // vm.$watch('isHot',{
+    //     // immediate:true, //初始化时让handler调用一下
+    //     handler(newValue,oldValue){
+    //         console.log('isHot被修改了',newValue,oldValue);
+    //     }
+    // })
+    
+    // 监视的简写
+    // 简写的代价就是不能配置deep和immediate
+    // 同样不允许写成箭头函数
+    vm.$watch('isHot',function(newValue,oldValue){
+        console.log('isHot被修改了',newValue,oldValue);
+    })
+</script>
+</html>

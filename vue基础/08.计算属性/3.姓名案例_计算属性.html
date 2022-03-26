@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名案例_计算属性</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        姓: <input type="text" v-model="firstName"><br>
+        名: <input type="text" v-model="lastName"><br>
+        <!-- 调用方法需要加括号 -->
+        <!-- 只要data中的数据发生改变，则Vue会重新解析模板 -->
+        姓名: <span>{{fullName}}</span>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    new Vue({
+        el:'#root',
+        data:{
+            firstName:'张',
+            lastName:'三',
+        },
+        computed:{
+            // fullName虽然作为计算属性，但是仍在被放在了vm中（放的是get的返回值）所以可以直接用插入语法写
+            fullName:{
+                // 当有人读取fullName时会调用get函数，且返回值会作为fullName的值
+                // 计算属性有缓存get只会在如下时候调用
+                // get的调用时机
+                // 1.初次调用fullName时
+                // 2.所依赖的数据发生变化时（也就是这里的firstName和lastName）
+                get(){
+                    // this仍然是Vue对象
+                    // console.log(this);
+                    console.log('get被调用了');
+                    return this.firstName + '-' + this.lastName
+                },
+                // set只有当fullName被调取的时候调用
+                set(value){
+                    console.log('set被调用');
+                    this.firstName = value.split('-')[0];
+                    this.lastName = value.split('-')[1];
+                }
+                // 计算属性的get和set也不能写成箭头函数
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <school></school>
+        <hr>
+        <student></student>
+        <hr>
+        <hello></hello>
+    </div>
+
+    <!-- 因为hello是全局的组件，所以也能够被root2使用 -->
+    <div id="root2">
+        <hello></hello>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+
+    // 创建school组件
+    const school = Vue.extend({
+        // 组件结构
+        template:`
+            <div>
+                <h2>学校名称：{{schoolName}}</h2>
+                <h2>学校地址：{{address}}</h2>
+                <button @click='showName'>点我提示学校名</button>
+            </div>
+        `,
+        // el:'#root',组件不要写el配置项
+        // 因为最终所有的组件都要被vm管理，由vm决定服务于哪个容器
+        // 组件data必须要使用函数式
+        // data写成函数式时，每次引用都会返回全新的对象，不会相互影响
+        
+        data(){
+            return {
+            schoolName:'lalal',
+            address:'北京', }
+        },
+        methods: {
+            showName(){
+                console.log(this);
+                alert(this.schoolName);
+            }
+        },
+    })
+
+    // 创建student组件
+    const student = Vue.extend({
+        template:`
+            <div>
+                <h2>学生名称：{{studentName}}</h2>
+                <h2>学生地址：{{age}}</h2>   
+            </div>
+        `,
+        data(){
+            return {
+                studentName:'heihei',
+                age:18 }
+        }
+    })
+
+    // 创建hello组件
+    const hello = Vue.extend({
+        template:`
+            <div>
+                <h2>{{msg}}</h2>    
+            </div>
+        `,
+        data(){
+            return {
+                msg:'hello world'
+            }
+        }
+    })
+
+    // 注册全局组件
+    Vue.component('hello',hello)
+
+    new Vue({
+        el:'#root',
+        // 注册组件（局部注册）
+        components:{
+            // key:value形式  key：组件名 ，value式组件变量名
+            school:school,
+            student:student
+        }
+    });
+
+    new Vue({
+        el:'#root2',
+        data:{
+            
+        }
+    });
+</script>
+</html>

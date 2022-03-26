@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <!-- 重名可以使用对象的简写形式  {opacity:opacity} => {opacity}-->
+        <h2 :style="{opacity}">欢迎学习Vue</h2>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            opacity:1
+        },
+        methods: {
+            // change(){
+            //     setInterval(()=>{
+            //         this.opacity -=0.01
+            //         if(this.opacity <= 0) this.opacity = 1
+            //     },16)    
+            // }
+        },
+        // Vue完成模板额解析并把真实的Dom元素放入页面后调用mounted
+        // 第一次，挂载，往后的更新就不再执行
+        mounted() {
+            // mounted的this就是vm   
+            setInterval(()=>{
+                this.opacity -=0.01
+                if(this.opacity <= 0) this.opacity = 1
+            },16)    
+        },
+    });
+    // 通过外部的定时器进行实现（不推荐）
+    // setInterval(()=>{
+    //     vm.opacity -=0.01
+    //     if(vm.opacity <= 0) vm.opacity = 1
+    // },16)
+</script>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <style>
+        .basic{
+            width: 400px;
+            height: 100px;
+            border: 1px solid black;
+        }
+        .normal{
+            background-color: skyblue;
+        }
+        .happy{
+            background-color: orange;
+        }
+        .bad{
+            background-color: #CCC;
+        }
+        .lalala1{
+            border: 5px solid #723;
+        }
+        .lalala2{
+            font-size: 30px;
+            background-color: aquamarine;
+        }
+        .lalala3{
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <!-- :class 表示class属性要进行动态指定了 -->
+        <!-- 字符串写法 适用于：样式的类名不确定，需要动态指定 -->
+        <div class="basic" :class = "mood" @click="changeMood">{{name}}</div>
+
+        <!-- 数组写法 适用于：要绑定的样式个数不确定，名字也不确定 -->
+        <div class="basic" :class = 'classArr'>{{name}}</div>
+
+         <!-- 对象写法 适用于：要绑定的样式个数确定，名字也确定，但是要动态界定用不用 -->
+        <div class="basic" :class = 'classObj'>{{name}}</div>
+
+        <!-- :style 表示style属性要进行动态指定了 -->
+        <div class="basic" :style = "{fontSize: fsize+'px'}">{{name}}</div>
+
+        <!-- 升级写法 -->
+        <div class="basic" :style = "styleObj">{{name}}</div>
+
+        <!-- style数组写法 -->
+        <div class="basic" :style = "[styleObj,styleObj2]">{{name}}</div>
+    </div>
+
+
+
+
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            name:'lalala',
+            mood:'normal',
+            classArr:['lalala1','lalala2','lalala3'],
+            classObj:{
+                // false表示不应用lalala1
+                lalala1:false,
+                // true表示应用lalla2
+                lalala2:true,
+                lalala3:false
+            },
+            fsize:40,
+            styleObj:{
+                backgroundColor:'#ccc'
+            },
+            styleObj2:{
+                border:'5px solid #666'
+            }
+        },
+        methods: {
+            changeMood(){
+                // 展示happy
+                this.mood = 'happy'
+                // 随机展示心情
+                const arr = ['normal','happy','bad'];
+                // Math.random生成的随机数（0-1）包含0但是不包含1
+                console.log(Math.floor(Math.random()*3));
+                this.mood = arr[Math.floor(Math.random()*3)];
+            }
+        },
+    });
+</script>
+</html>

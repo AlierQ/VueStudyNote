@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>何为数据代理</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 数据代理:通过一个对象代理另一个对象中属性的操作 (读/写) -->
+</body>
+<script type="text/javascript">
+    let obj1 = {x:100};
+    let obj2 = {y:200};
+    // 绑定obj2对象,为其添加与obj1相同的x属性
+    Object.defineProperty(obj2,'x',{
+        // 使用obj1中的x属性来设置obj2中的x属性
+        get(){
+            return obj1.x;
+        },
+        // 当obj2中的x属性被修改之后修改obj1中的x属性
+        set(value){
+            obj1.x = value;
+        }
+    });
+</script>
+</html>

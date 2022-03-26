@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>初识vue</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <!-- 插值语法 -->
+        <h1>Hello {{name}}!</h1>
+    </div>
+
+    <script type="text/javascript">
+        //关闭开发者提示
+        Vue.config.productionTip = false;
+
+        // 创建Vue实例
+        new Vue({
+            el:'#root', //element元素，用于指定当前Vue实例为那个容器服务，值通常为CSS选择器字符
+            data:{  // data中用于存储数据，数据供指定的容器去使用，值暂时写成一个对象
+                name:'World111'
+            },
+        });
+    </script> 
+</body>
+</html>

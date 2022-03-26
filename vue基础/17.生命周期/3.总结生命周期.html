@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2 :style="{opacity:opacity}">欢迎学习Vue</h2>
+         <button @click="stop">点我停止变换</button><br><br>
+         <button @click="opacity=1">透明度设置为1</button>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            opacity:1
+        },
+        methods:{
+            stop(){
+                // 清除计时器，这是透明度还是可以通过修改opacity的值进行修改
+                // clearInterval(this.timer)
+                // 彻底删除vm，透明度不可以再通过opacity进行更改
+                this.$destroy()
+            }
+        },
+        mounted() {
+            // mounted的this就是vm   
+            // 向vm上存储一个定时器id，方便后续用于关闭
+            this.timer = setInterval(()=>{
+                this.opacity -=0.01
+                if(this.opacity <= 0) this.opacity = 1
+            },16)    
+        },
+        beforeDestroy() {
+            // 清除定时器可以放在销毁vm对象之前做
+            clearInterval(this.timer)
+        },
+    });
+</script>
+</html>

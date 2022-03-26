@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>key的原理</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>人员列表</h2>
+        <button @click.once="add">添加一个老刘</button>
+        <!-- key只在Vue内部使用，生成Dom的时候不会真的添加key属性 -->
+        <ul>
+            <li v-for="(person,index) of persons" :key="index">{{person.name}}-{{person.age}}<input type="text"></li>
+        </ul>
+    </div> 
+</body>
+<script>
+    Vue.config.productionTip=false;
+    new Vue({
+        el:'#root',
+        data:{
+            persons:[
+                {id:001,name:'张三',age:'18'},
+                {id:002,name:'李四',age:'19'},
+                {id:003,name:'王 五',age:'20'}
+            ]
+        },
+        methods: {
+            add(){
+                const p = {id:'004',name:'老刘',age:30};
+                this.persons.unshift(p);
+            }
+        },
+    });
+</script>
+</html>

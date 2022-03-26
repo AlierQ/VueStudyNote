@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <!-- <app></app> -->
+    </div>
+</body>
+<!-- 
+    步骤：
+        1、创建一个子组件
+        2、在父组件中注册子组件
+        3、在父元素的结构中使用子组件标签
+ -->
+<script>
+    Vue.config.productionTip=false;
+
+    // 创建hello组件
+    const hello = {
+        template:`<h1>{{msg}}</h1>`,
+        data(){
+            return {
+                msg:'Hello World'
+            }
+        }
+    }
+
+    // 创建学生组件
+    const student = {
+        template:`
+            <div>
+                <h2>学生姓名：{{name}}</h2>
+                <h2>学生年龄：{{age}}</h2>    
+            </div>
+        `,
+        data(){
+            return {
+                name:'赵四',
+                age:18
+            }
+        }
+    }
+    
+    // 创建school组件
+    const school = {
+        // 在定义的时候就指定开发者工具中的名称
+        template:`
+            <div>
+                <h2>学校名称：{{name}}</h2>
+                <h2>学校地址：{{address}}</h2>
+                <student></student>    
+            </div>
+        `,
+        data(){
+            return {
+                name:'啦啦啦',
+                address:'北京'
+            }
+        },
+        components:{
+            student:student
+        }
+    }
+    
+    // 定义app组件
+    const app = Vue.extend({
+        template:`
+            <div>
+                <hello></hello>
+                <school></school>    
+            </div>
+        `,
+        components:{
+            school:school,
+            hello:hello
+        }
+    })
+
+    //注册不能再创建之前
+    // Vue.component('school',school)
+    
+    new Vue({
+        el:'#root',
+        template:`
+            <app></app>
+        `,
+        // 注册组件
+        components:{
+            app:app
+        }
+    });
+</script>
+</html>

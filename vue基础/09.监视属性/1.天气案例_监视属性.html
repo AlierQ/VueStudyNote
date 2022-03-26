@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气案例_监视属性</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>今天天气很{{info}}</h2>
+        <button @click="changeWeather">切换天气</button>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            isHot:true
+        },
+        // 计算属性
+        computed:{
+            info(){
+                return this.isHot? '炎热' : '凉爽'
+            }
+        },
+        // 事件绑定
+        methods: {
+            // 可以直接将this.isHot = !this.isHot;写在@click处（简单可以写，复杂不建议写）
+            changeWeather(){
+                this.isHot = !this.isHot;
+            }  
+        },
+        // 监视
+        watch:{
+            isHot:{
+                // handler在isHot发生改变时被调用
+                handler(newValue,oldValue){
+                    console.log('isHot被修改了',newValue,oldValue);
+                },
+                // 初始化时让handler调用一下
+                immediate:true
+            },
+            // 可以监听计算属性
+            info:{
+                // handler在isHot发生改变时被调用
+                handler(newValue,oldValue){
+                    console.log('info被修改了',newValue,oldValue);
+                },
+                // 初始化时让handler调用一下
+                immediate:true
+            }
+        }
+    });
+    // 监视的另一种写法
+    vm.$watch('isHot',{
+        // handler在isHot发生改变时被调用
+        handler(newValue,oldValue){
+            console.log('isHot被修改了',newValue,oldValue);
+        },
+        // 初始化时让handler调用一下
+        immediate:true
+    })
+</script>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let data = {
+        name:'lalal',
+        addr:'chongqing'
+    }
+    // 创建一个监视的实例对象，用于监视data中属性的变化
+    const obs = new Observer(data);
+
+    function Observer(obj) {
+        // 汇总对象中所有属性名形成一个数组
+        const keys = Object.keys(obj)
+        // 遍历
+        keys.forEach((k)=>{
+            Object.defineProperty(this,k,{
+                // 将obj中的属性传入到Observer中
+                get(){
+                    return obj[k]
+                },
+                // Observer中的属性更改后相应修改obj中的数据
+                set(val){
+                    console.log('${k}被修改');
+                    obj[k] = val
+                }
+            })
+        })
+    }
+</script>
+</html>

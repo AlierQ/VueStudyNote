@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件的几个注意点</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h1>{{msg}}</h1>
+        <school></school>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+
+    // 创建组件
+    // 组件名命名方式
+    // 一个单词： 全部小写或者首字母大写
+    // 多个单词：
+    //  1、my-school   （全部小写中间用短横线进行连接，在js中要用引号引起来）
+    //  2、MySchool    （要在脚手架环境中使用）
+    // const s = Vue.extend({
+    //     // 在定义的时候就指定开发者工具中的名称
+    //     name:'xuexiaoming',
+    //     template:`
+    //         <div>
+    //             <h2>学校名称：{{name}}</h2>
+    //             <h2>学校地址：{{address}}</h2>    
+    //         </div>
+    //     `,
+    //     data(){
+    //         return {
+    //             name:'啦啦啦',
+    //             address:'北京'
+    //         }
+    //     }
+    // })
+
+    // 简写方式
+    const s = {
+        // 在定义的时候就指定开发者工具中的名称
+        name:'xuexiaoming',
+        template:`
+            <div>
+                <h2>学校名称：{{name}}</h2>
+                <h2>学校地址：{{address}}</h2>    
+            </div>
+        `,
+        data(){
+            return {
+                name:'啦啦啦',
+                address:'北京'
+            }
+        }
+    }
+    
+    //注册不能再创建之前
+    Vue.component('school',s)
+    
+    new Vue({
+        el:'#root',
+        data:{
+            msg:'嘿嘿嘿'
+        }
+    });
+</script>
+</html>

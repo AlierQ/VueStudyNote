@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表排序</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>人员列表</h2>
+        <button @click="updateMa">更新马冬梅信息</button>
+        <ul>
+            <li v-for="person in persons" :key="person.id">{{person.name}}-{{person.age}}-{{person.sex}}
+            </li>
+        </ul>
+    </div> 
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            sortType:0,
+            keyWord:'',
+            persons:[
+                {id:001,name:'马冬梅',age:'19',sex:'女'},
+                {id:002,name:'周冬雨',age:'18',sex:'女'},
+                {id:003,name:'周杰伦',age:'22',sex:'男'},
+                {id:004,name:'温兆伦',age:'21',sex:'男'}
+            ]
+        },
+        methods:{
+            updateMa(){
+                // this.persons[0].age = 31;  //奏效
+                // 不奏效
+                // this.persons[0] = {id:001,name:'马冬梅',age:'22',sex:'女'};  //Vue监测不到
+                this.persons.splice(0,1,{id:001,name:'马冬梅',age:'22',sex:'女'})
+            }
+        }
+    });
+</script>
+</html>

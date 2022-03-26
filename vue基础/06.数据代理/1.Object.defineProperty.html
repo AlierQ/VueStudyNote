@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object.defineProperty方法</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    
+</body>
+<script>
+    Vue.config.productionTip=false;
+    let number = 18;
+    let person = {
+        name:'张三',
+        sex:'男',
+        // age:18
+    }
+    // 三个参数： 给那个对象添加属性  添加属性名 配置项
+    // Object.defineProperty 添加的属性不参与枚举（遍历）
+    Object.defineProperty(person,'age',{
+        // value:18,
+        // enumerable:true,  // 控制属性是否可以枚举，默认值是false
+        // writable:true,  // 控制属性值是否可以被修改，默认值是false
+        // configurable:true,  //控制属性是否可以被删除，默认值是false
+
+        // 当有人读取person的age属性时，get函数（getter）会被调用，且返回值时age的值
+        // 可以简写get()
+        get:function(){
+            return number
+        },
+
+        // 当有人修改person的age属性时，set函数（setter）就会被调用，参数是age的值
+        set:function(value){
+            console.log('有人修改了age，且值是'+value);
+            // 因为age来自于number，所以修改时也要修改number的值，否则age的值不改变
+            number = value;
+        }
+    });
+
+    // for遍历
+    // for(let key in person){
+    //     console.log(person[key]);
+    // }
+
+    // Object.keys()方法可以将对象中所有的属性名都提取出来
+    // console.log(Object.keys(person));
+    console.log(person);
+</script>
+</html>

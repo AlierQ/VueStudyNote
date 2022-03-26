@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        需求1：定义一个v-big指令，和v-text功能相似，但是会把绑定的数值放大十倍
+        需求2：定义一个v-fbind指令，和v-bind功能类似，但可以让其所绑定的input默认获得焦点
+     -->
+     <div id="root">
+        <h2>当前的n值是： <span v-text="n"></span></h2>
+        <h2>放大十倍的n值是： <span v-big-number="n"></span></h2>
+        <button @click="n++">点我n+1</button>
+        <hr>
+        <input type="text" v-fbind:value="n">
+     </div>
+     <div id="root2">
+        <input type="text" v-fbind:value="x">
+     </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    // 全局指令
+    Vue.directive('fbind',{
+        // 指令和函数绑定成功时调用（初始）   
+        bind(element,binding){
+            // console.log('bind');
+            element.value = binding.value
+        },
+        // 指令所在元素被插入页面的时候调用
+        inserted(element,binding){
+            // console.log('inserted');
+            element.focus()
+        },
+        // 指令所在的模板被重新解析时调用
+        update(element,binding){
+            // console.log('update');
+            element.value = binding.value
+        }
+    })
+    // 全局指令
+    Vue.directive('big',function(element,binding){
+        // 真实Dom元素
+        console.log(element);
+        // 检验谁是不是谁的元素
+        console.log(element instanceof HTMLElement)
+        // binding绑定对象
+        console.log(binding);
+        // this对象不是vm是window
+        console.log(this);
+        element.innerText = binding.value*10
+    })
+    new Vue({
+        el:'#root',
+        data:{
+            n:1
+
+        },
+        // 局部指令
+        directives:{
+        // 写法一 
+           fbind:{
+                // 指令和函数绑定成功时调用（初始）   
+                bind(element,binding){
+                    // console.log('bind');
+                    element.value = binding.value
+                },
+                // 指令所在元素被插入页面的时候调用
+                inserted(element,binding){
+                    // console.log('inserted');
+                    element.focus()
+                },
+                // 指令所在的模板被重新解析时调用
+                update(element,binding){
+                    // console.log('update');
+                    element.value = binding.value
+                }
+           },
+        // 写法二
+        // 注意
+        // 当指令使用多个单词的时候要使用xxx-xxx的形式
+        // 这种形式写指令函数的时候要将其变成字符串
+            'big-number':function(element,binding){
+                // 真实Dom元素
+                console.log(element);
+                // 检验谁是不是谁的元素
+                console.log(element instanceof HTMLElement)
+                // binding绑定对象
+                console.log(binding);
+                // this对象不是vm是window
+                console.log(this);
+                element.innerText = binding.value*10
+            }    
+            // big函数何时会被调用？
+            //  1、指令与元素成功绑定时（初识）
+            //  2、指令所在的模板被重新解析的时候会调用
+        }
+    });
+    new Vue({
+        el:'#root2',
+        data:{
+            x:1
+        }
+    });
+</script>
+</html>

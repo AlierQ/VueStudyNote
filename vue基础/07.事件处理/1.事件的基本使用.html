@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件的基本使用</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h2>欢迎来到{{name}}学习</h2>
+        <!-- v-on:click="showInfo"绑定点击事件 
+            点击后去寻找showInfo的函数调用
+        -->
+        <button v-on:click="showInfo1">点我提示信息1(不传参)</button><br><br>
+        <!-- 简写方式 -->
+        <button @click="showInfo1">简写方式点我提示信息1</button><br><br>
+
+        <button @click="showInfo2($event,66)">点我提示信息2(要传参)</button>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            name:'lalal'
+        },
+        methods:{
+            showInfo1(event){
+                // 拿到事件源
+                console.log(event.target);
+                console.log(event.target.innerText);
+                console.log(this); // 此处的this是vm
+                // 不能使用箭头函数,使用箭头函数则this为window
+                // alert('同学你好');
+            },
+            showInfo2(event,number){
+                console.log(event,number);
+            }
+        }
+    });
+</script>
+</html>

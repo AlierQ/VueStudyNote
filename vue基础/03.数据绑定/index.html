@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据绑定</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        单向数据绑定<input type="text" v-bind:value="name">
+        <!-- 实例中数据改变容器中的数据也会改变，但是容器中数据改变，实例对象中数据不会改变
+            这就称为单向数据绑定
+            v-bind是单项绑定
+        -->
+        <br>
+        双向数据绑定<input type="text" v-model:value="name">
+        <!-- 容器中的数据改变实例中的数据也改变，称之为双向绑定的
+            v-model是双项绑定    
+            v-model只能运用在表单类元素中
+        -->
+    </div>
+</body>
+    <script>
+        Vue.config.productionTip=false;
+        new Vue({
+            el:'#root',
+            data:{
+                name:'哈哈哈123'
+            }
+        });
+    </script>
+</html>

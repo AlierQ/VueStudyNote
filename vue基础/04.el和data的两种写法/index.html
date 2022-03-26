@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>el和data的两种写法</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <h1>你好，{{name}}</h1>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    // new Vue({
+    //     el:'#root',// el第一种写法
+    //     data:{
+            
+    //     }
+    // });
+    // const v = new Vue({
+    //     // el:'#root',
+    //     data:{
+            
+    //     }
+    // });  
+    // // 为实例对象指定容器
+    // v.$mount('#root');  // el第二种写法
+
+    new Vue({
+        el:'#root',
+        // data的第一种写法：对象式
+        // data:{
+        //     name:'哈哈哈'
+        // }
+        // 对象的第二种写法：函数式
+        // 组件必须要用函数式
+        data:function(){
+        // 可以简写成 data(){}
+            // 此处的 this 是 Vue实例对象
+            // 此处不能写成箭头函数 data:()=>{} 箭头函数没有自己的this 所以箭头函数的this是window
+            return{
+                name:'哈哈哈'
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        1、一个重要的内置关系：VueComponent.prototype.__proto__ === Vue.prototype
+        2、目的是让组件实例对象vc可以访问到Vue原型上的属性和方法
+     -->
+    <div id="root">
+
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    // 定义一个构造函数
+    function Demo() {
+        this.a = 1
+        this.b = 2
+    }
+
+    // 创建一个Demo的实 例对象
+    const d = new Demo()
+
+    console.log(Demo.prototype); // 显示原型属性
+    console.log(d.__proto__);  //隐式原型属性
+
+    // 程序员通过显示原型属性操作原型，追加一个x属性，值为99
+    Demo.prototype.x = 99
+
+    // 可以通过对象实例直接去获取通过构造函数在原型对象上追加的值
+    console.log(d.x);
+
+    // 定义一个组件
+    const school = Vue.extend({
+        data(){
+            return {
+                name:'lalal'
+            }
+        }
+    })
+
+    // 创建一Vue实例对象
+    const vm = new Vue({
+        el:'#root',
+        data:{
+            msg:'hello'
+        }
+    });
+
+    // school组件的原型对象是VueComponent
+    console.log(school.prototype);
+    // VueComponent的原型对象
+    console.log(school.prototype.__proto__);
+    // VueComponent的原型对象和Vue的原型对象一致
+    console.log(school.prototype.__proto__ === Vue.prototype);
+
+    console.log(vm);
+</script>
+</html>

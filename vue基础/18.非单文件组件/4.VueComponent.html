@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <school></school>
+        <hello></hello>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    
+    // 注册school组件
+    const school = Vue.extend({
+        // 在定义的时候就指定开发者工具中的名称
+        template:`
+            <div>
+                <h2>学校名称：{{name}}</h2>
+                <h2>学校地址：{{address}}</h2>
+                <button @click='showName'>点我提示学校名</button>
+            </div>
+        `,
+        data(){
+            return {
+                name:'啦啦啦',
+                address:'北京'
+            }
+        },
+        methods: {
+            showName(){
+                // this是VueComponent对象  
+                console.log(this.name);
+            }
+        },
+    })
+
+    const hello = Vue.extend({
+        template:'<h2>{{msg}}</h2>',
+        data(){
+            return {
+                msg:'hello world'
+            }
+        }
+    })
+
+    console.log(school);
+    console.log(hello);
+    // 验证school和hello是不是一个东西
+    console.log(school === hello);  //false
+    
+    new Vue({
+        el:'#root',
+        // 注册组件
+        components:{
+            school:school,
+            hello:hello
+        }
+    });
+</script>
+</html>

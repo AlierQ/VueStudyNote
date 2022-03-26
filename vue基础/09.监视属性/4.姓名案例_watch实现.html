@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名案例_watch实现</title>
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        姓: <input type="text" v-model="firstName"><br>
+        名: <input type="text" v-model="lastName"><br>
+        姓名: <span>{{fullName}}</span>
+    </div>
+</body>
+<script>
+    Vue.config.productionTip=false;
+    new Vue({
+        el:'#root',
+        data:{
+            firstName:'张',
+            lastName:'三',
+            fullName:'张-三'
+        },
+        watch:{
+            firstName(val){
+                // 计算属性没有办法做异步操作
+                // 如果此处不写成箭头函数，则this为window
+                // 写成箭头函数丢失this往外找，则找到firstName普通函数的this，也就是Vue实例对象
+                setTimeout(() => {
+                    this.fullName = val + '-' + this.lastName;
+                }, 1000);
+            },
+            lastName(val){
+                this.fullName = this.firstName + '-' + val;
+                
+            }
+        }
+    });
+</script>
+</html>

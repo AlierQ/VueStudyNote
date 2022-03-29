@@ -1,33 +1,4 @@
-# vue_test
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
 # 笔记
-
-
 ## ref属性
     1.被用来给元素或子组件注册引用信息(id的代替者)
     2.应用在html标签上获取的是真实Dom,应用在组件标签上是组件实例对象(vc)
@@ -226,3 +197,58 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```
 
 ​		3.备注：若有多个元素需要过度，则需要使用<transition-group>，且每个元素都要指定key值
+
+## Vue脚手架配置代理
+
+#### 方法一
+
+在vue.config.js中添加如下配置
+
+```js
+devServer: {
+    proxy: 'http://localhost:5000'
+}
+```
+
+说明：
+
+​	1、优点：配置简单，请求资源时直接发给前端（8080）即可
+
+​	2、缺点：不能配置多个代理，不能灵活控制请求是否走代理
+
+​	3、工作方式：若按照上诉配置配置代理，当请求前端不存在的资源时，请求才会转发给服务器（有钱匹配前端资源）
+
+#### 方法二
+
+编写vue.config.js配置具体代理规则：
+
+```js
+devServer: {
+    proxy: {
+      // 代理一
+      '/api': { // 请求前缀:用于灵活控制是否走代理,走代理即加上
+        target: 'http://localhost:5000', // 目标服务器
+        // 清除请求前缀
+        pathRewrite:{'^/api':''},
+        ws: true, // 用于支持websocket
+        changeOrigin: true // 用于控制请求头中的host值
+      },
+      // 代理二
+      '/foo': {
+        target: 'http://localhost:5001',
+        pathRewrite:{'^/foo':''},
+      }
+   }
+}
+/*
+	changeOrigin设置为true时,服务器收到的请求头中的host为：localhost:5000
+	changeOrigin设置为false时,服务器收到的请求头中的host为：localhost:8080
+	默认值为true
+*/
+```
+
+说明：
+
+​	1、优点：可以配置多个代理，且可以灵活的控制请求是否走代理
+
+​	2、缺点：配置略微繁琐，请求资源时必须加前缀

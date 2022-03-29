@@ -5,4 +5,3 @@ vue_test/*.js
 vue_test/node_modules/
 vue_test/public/
 vue_test/src/
-*.js

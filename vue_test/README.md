@@ -253,3 +253,107 @@ devServer: {
 ​	1、优点：可以配置多个代理，且可以灵活的控制请求是否走代理
 
 ​	2、缺点：配置略微繁琐，请求资源时必须加前缀
+
+## 插槽
+
+​	1、作用：让父组件可以向子组件指定位置插入html，也是组件间通信的方式，适用于<span style="color:red">**父组件 ===> 子组件**</span>。
+
+​	2、分类：默认插槽、具名插槽、作用域插槽
+
+​	3、使用方式：
+
+​		1、默认插槽	
+
+```html
+父组件中：
+	<Category>
+        <div>html结构</div>
+	</Category>
+子组件中：
+	<template>
+        <div>
+            <!-- 定义一些插槽，等待组件使用者进行填充 -->
+            <slot>这里是一个插槽</slot>
+        </div>
+    </template>
+```
+
+​		2、具名插槽
+
+```html
+父组件中：
+<Category>
+    <!-- 依靠slot属性来指定要放置的插槽 -->
+    <div slot="center">
+        html结构
+    </div>
+    <div slot="footer">
+        html结构
+    </div>
+</Category>
+子组件中：
+<template>
+    <div>
+        <!-- 多个插槽 -->
+        <slot name="center">插槽默认内容</slot>
+        <slot name="footer">插槽默认内容</slot>
+    </div>
+</template>
+```
+
+​		3、作用域插槽
+
+​			1、理解：<span style="color:red">数据在组件自身，但是数据生成的结构需要组件的使用者来决定。</span>（games数据在Cetagory组件中，但使用数据所遍历出来的结构由App组件决定）
+
+​			2、具体编码：
+
+```html
+父组件中：
+<Category title="游戏">
+    <!-- 作用域插槽的使用者必须要使用template包裹待使用数据并且要使用scope属性去接收数据
+-->
+    <template scope="lalala">
+        <!-- {{lalala}} scope接收的数据是一个对象(可能有多个数据)，里面包含着一个数组，数组名就是插槽传递的数据的名字-->
+        <ul>
+            <li v-for="(item,index) of lalala.games" :key="index">{{item}}</li>
+        </ul>
+        <h4>这是作用域插槽传递过来的第二个参数x的值：{{lalala.x}}</h4>
+    </template>
+
+</Category>
+<Category title="游戏">
+    <!-- 支持Es6中的结构赋值，从多个对象中只拿自己需要的数据 -->
+    <template scope="{games}">
+        <ol style="color:red">
+            <li v-for="(item,index) of games" :key="index">{{item}}</li>
+        </ol>
+    </template>
+</Category>
+<Category title="游戏">
+    <!-- 还可以使用slot-scope去接收数据 -->
+    <template slot-scope="{games}">
+        <h4 v-for="(item,index) of games" :key="index">{{item}}</h4>
+    </template>
+</Category>
+
+子组件中：
+<template>
+    <div class="category">
+        <h3>{{title}}分类</h3>
+        <!-- 默认插槽 -->
+        <!-- 将games数据传递过去 -->
+        <slot :games="games" x="hallo">这里是一个插槽</slot>
+    </div>
+</template>
+<script>
+    export default {
+        name:'Category',
+        props:['title'],
+        data() {
+            return {
+                games:['红色警戒',' 穿越火线','劲舞团','超级玛丽']
+            }
+        }
+    }
+</script>
+```

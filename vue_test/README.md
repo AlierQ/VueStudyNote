@@ -357,3 +357,214 @@ devServer: {
     }
 </script>
 ```
+
+## Vuex
+
+### 1、概念
+
+​	在Vue中实现集中式状态（数据管理）管理的一个Vue插件，对vue应用中多个组件的共享状态进行集中式的管理（读/写）。也是一种组件间通信的方式，且适用于任意组件间通信。
+
+### 2、何时使用？
+
+​	多个组件需要共享时
+
+### 3、搭建vuex环境
+
+​	1、创建文件：src/store/index.js
+
+```js
+// 该文件用于创建vuex中最为核心的store
+
+// 要注意Vuex的版本问题！！！
+
+// 引入Vue
+import Vue from 'vue'
+
+// 引入Vuex
+import Vuex from 'vuex'
+
+
+// 准备actions——用于响应组件中的动作
+const actions = {}
+
+// 准备mutations——用于操作数据（state）
+const mutations = {}
+
+// 准备state——用于存储数据
+const state = {}
+
+// 使用vuex
+Vue.use(Vuex)
+
+// 创建store并暴露store
+export default new Vuex.Store({
+    actions,
+    mutations,
+    state
+})
+
+
+```
+
+​	2、在main.js中创建vm时传入store配置项
+
+```js
+......
+// 引入store
+import store from './store'
+......
+
+// 创建vm
+new Vue({
+  render: h => h(App),
+  // 引入并且使用vuex插件之后，再配置store就可以在所有的组件实例对象上看到$store
+  store
+}).$mount('#app')
+
+```
+
+### 4、基本使用
+
+​	1、初始化数据、配置actions、配置mutations、操作文件store.js
+
+```js
+// 该文件用于创建vuex中最为核心的store
+
+// 要注意Vuex的版本问题！！！
+
+// 引入Vue
+import Vue from 'vue'
+
+// 引入Vuex
+import Vuex from 'vuex'
+
+
+// 准备actions——用于响应组件中的动作
+const actions = {
+    // 没有业务逻辑的可以直接使用commit进行调用mutation
+    // addNumber(context,value){
+    //     // console.log("加号action函数被调用了",context,value);
+    //     context.commit("ADD_NUMBER",value)
+    // }, 
+    // subNumber(context,value){
+    //     context.commit("SUB_NUMBER",value)
+    // },
+    addOdd(context,value){
+        // 业务逻辑 ：奇数再加
+        if(context.state.sum%2)
+            context.commit("ADD_NUMBER",value)
+    },
+    addWait(context,value){
+        // 业务逻辑：延时500ms再加
+        setTimeout(()=>{
+            context.commit("ADD_NUMBER",value)
+        },500)
+    }
+}
+
+// 准备mutations——用于操作数据（state）
+const mutations = {
+    ADD_NUMBER(state,value){
+        state.sum += value
+    },
+    SUB_NUMBER(state,value){
+        state.sum -= value
+    }
+}
+
+// 准备state——用于存储数据
+const state = {
+    sum:0 // 当前的和
+}
+
+// 使用vuex
+Vue.use(Vuex)
+
+// 创建store并暴露store
+export default new Vuex.Store({
+    actions,
+    mutations,
+    state
+})
+```
+
+​	2、组件中读取vuex中的数据：$store.state.sum
+
+​	3、组件中修改vuex中的数据：$store.dispatch('actions中的方法名',数据)或$store.commit('actions中的方法名',数据)
+
+> 备注：若没有网络请求或者其他业务逻辑，组件中也可以越过actions，即不再写dispatch，直接编写commit
+
+### 5、getters的使用
+
+​	1、概念：当state中的数据需要经过加工够再使用时，可以使用getters加工
+
+​	2、在store.js中追加getters配置
+
+```js
+......
+const getters = {
+    bigsum(state){
+        return state.sum*10
+    }
+}
+
+// 创建store并暴露store
+export default new Vuex.Store({
+	......
+    getters
+})
+
+```
+
+​	3、组件中读取数据：$store.getter.bigsum
+
+> 注意：作用于data中的computed相似，通过return返回属性的值
+
+### 6、四个map方法的使用
+
+1、mapState方法：用于帮助我们映射state中的数据为计算属性
+
+```js
+computed:{
+    // 借助mapState生成计算属性，sum、school、subject（对象写法）
+	...mapState({sum:'sum',school:'school',subject:'subject'}),
+        
+    // 借助mapState生成计算属性，sum、school、subject（对象写法）
+	...mapState(['sum','school','subject'])
+    
+}
+```
+
+2、mapGetters方法：用于帮助我们映射getters中的数据作为计算属性
+
+```js
+computed:{
+    // 借助mapGetters生成计算属性，bigsum（对象写法）
+	...mapGetters({bigsum:'bigsum'}),
+        
+    // 借助mapGetters生成计算属性，sum、school、subject（对象写法）
+	...mapGetters(['bigsum'])
+}
+```
+
+3、mapActions方法：帮助我们生成与actions对话的方法，即：包含$store.dispatch(xxx)的函数
+
+```js
+//靠mapActions生成：addNumber、subNumber，对象写法
+...mapMutations({addNumber:'addNumber',subNumber:'subNumber'}),
+
+// 数组写法：
+...mapMutations(['addNumber','subNumber']), 
+```
+
+4、mapMutaions方法：帮助我们生成与mutations对话的方法，即：包含$store.commit(xxx)的函数
+
+```js
+//靠mapMutations生成：addOdd、addWait，对象写法
+...mapMutations({addOdd:'addOdd',addWait:'addWait'}),
+
+// 数组写法：
+...mapMutations(['addOdd','addWait']), 
+```
+
+> 注意：mapActions和mapMutations使用时，若需要传递参数，在模板中绑定事件时传递好参数，否则参数就是事件对象

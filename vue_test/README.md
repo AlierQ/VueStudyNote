@@ -568,3 +568,127 @@ computed:{
 ```
 
 > 注意：mapActions和mapMutations使用时，若需要传递参数，在模板中绑定事件时传递好参数，否则参数就是事件对象
+
+### 7、模块化+命名空间
+
+​	1、目的：让代码更好维护，让多种数据分类更加明确。
+
+​	2、修改store.js
+
+```js
+const countAbout = {
+    namespaced:true,  //开启命名空间
+    actions:{......},
+    mutations:{......},
+    state:{......}
+    getters:{......}
+}
+             
+             
+const personAbout = {
+    namespaced:true,  //开启命名空间
+    actions:{.....},
+    mutations:{......},
+    state:{......},
+    getters:{......}
+}
+           
+
+const store = new Vuex.Store({
+    modules:{
+        countAbout:countAbout,
+        personAbout:personAbout
+    }
+})
+```
+
+​	3、开启命名空间后，组件读取state数据：
+
+```js
+// 方式一：自己读数据
+this.$store.state.personAbout.list
+// 方式二：借助mapState读取
+...mapState('countAbout',['sum','school','subject']),
+```
+
+​	4、开启命名空间后，组件读取getter数据：
+
+```js
+// 方式一：自己读数据
+this.$store.getters['personAbout/firstPersonName']
+// 方式二：借助mapGetters读取
+...mapGetters('countAbout',['bigsum']),
+```
+
+​	5、开启命名空间后，组件中调用dispatch
+
+```js
+// 方式一：自己直接dispatch
+this.$store.dispatch('personAbout/addPersonName',personObj)
+// 方式二：借助mapActions
+...mapActions('countAbout',{addOdd:'addOdd',addWait:'addWait'})
+```
+
+​	6、开启命名空间后，组件中调用commit
+
+```js
+// 方式一：自己直接commit
+this.$store.commit('personAbout/ADD_PERSON',personObj)
+// 方式二：借助mapMutation
+...mapActions('countAbout',{addNumber:'ADD_NUMBER',subNumber:'SUB_NUMBER'})
+```
+
+## 路由
+
+​	1、理解：一个路由（route）就是一组映射关系（key-value），多个路由需要路由器（router）进行管理。
+
+​	2、前端路由：key时路径，value是组件
+
+### 1、基本使用
+
+​	1、安装vue-router，命令：npm install vue-router@3
+
+这里要注意vue@2对应的vue-router对应的版本是vue-router@3
+
+​	2、应用插件：Vue.use(VueRouter)
+
+​	3、编写router配置项
+
+```js
+// 专门用于创建整个应用的路由器
+
+// 引入VueRouter
+import VueRouter from "vue-router";
+// 引入路由组件
+import About from '../components/About.vue'
+import Home from '../components/Home.vue'
+
+// 创建并暴露一个路由器， 去管理一组一组的路由规则
+export default new VueRouter({
+    routes:[
+        {
+            path:'/about',
+            component:About
+        },
+        {
+            path:'/home',
+            component:Home
+        },
+    ]
+})
+```
+
+​	4、实现切换
+
+​		active-class可配置激活样式
+
+```js
+<router-link class="list-group-item" active-class="active" to="/about"> About </router-link>
+```
+
+​	5、指定展示的位置
+
+```js
+<router-view></router-view>
+```
+

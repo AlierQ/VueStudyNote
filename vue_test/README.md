@@ -682,13 +682,225 @@ export default new VueRouter({
 
 ​		active-class可配置激活样式
 
-```js
+```html
 <router-link class="list-group-item" active-class="active" to="/about"> About </router-link>
 ```
 
 ​	5、指定展示的位置
 
-```js
+```html
 <router-view></router-view>
+```
+
+### 2、几个注意点
+
+​	1、路由组件通常存放在`pages`文件夹，一般组件通常存放在`component`文件夹。
+
+​	2、通过切换，"隐藏"了的路由组件，默认是被销毁掉的，需要的时候再去挂载。
+
+​	3、每个组件都有自己的`$route`属性，里面存储着自己的路由信息。
+
+​	4、整个应用只有一个router，可以通过组件的`$router`属性获取到。
+
+### 3、多级路由（嵌套路由）
+
+​	1、配置路由规则，使用children配置项：
+
+```js
+routes:[
+    {
+        path:'/about',
+        component:About
+    },
+    {
+        path:'/home',
+        component:Home,
+        children:[  //children 配置子级路由
+            {
+                path:'message', // 子路由不加斜杠
+                component:Message
+            },
+            {
+                path:'news',
+                component:News
+            },
+        ]
+    }
+]
+```
+
+​	2、跳转（要写完整路径）：
+
+```html
+<router-link to="/home/news">News</router-link>
+```
+
+### 4、路由的query参数
+
+​	1、传递参数
+
+```html
+<!-- query参数  url?id=666&name=heihei -->
+<!-- 使用ES6中的模板字符串（可以在其中混入字符串变量）+v-bind（将属性转换成js语句） -->
+<!-- to的字符串写法-->
+<router-link :to="`/home/message/detail?id=${msg.id}&name=${msg.title}`">{{msg.title}}</router-link>
+            
+<!-- to的对象写法 （推荐写法） -->
+<router-link :to="{
+        path:'/home/message/detail',
+        query:{
+            id:msg.id,
+            title:msg.title
+        }
+    }">
+    {{msg.title}}
+</router-link>
+```
+
+​	2、接收参数
+
+```js
+$route.query.id
+$route.query.title
+```
+
+### 5、命名路由
+
+​	1、作用：可以简化路由的跳转。
+
+​	2、如何使用
+
+​		1、给路由命名：
+
+```js
+{
+	path:'demo',
+	component:Demo,
+	children:[
+		{
+			path:'test',
+			component:Test,
+			children:[
+				{
+					name:'hello' //给路由命名
+					path:'welcome',
+					component:Hello
+				}
+			]
+		}
+	]
+}
+```
+
+​		2、简化跳转
+
+```html
+<!-- 简化前，需要写完整的路径 -->
+<router-link to="/demo/test/welcome">跳转</router-link>
+
+<!-- 简化后，直接通过名字跳转 -->
+<router-link to="{name:hello }" >跳转</router-link>
+
+<!-- 简化写法配合传递参数 -->
+<router-link
+	:to="{
+     	name:'hello',
+         query:{
+         	id:666,
+         	title:'你好'
+         }
+	}"
+>跳转</router-link>
+```
+
+### 6、路由的params参数
+
+​	1、配置路由，声明接收params参数
+
+```js
+{
+	path:'/home',
+	component:Home,
+	children:[
+        {
+            path:'message',
+            component:Message,
+            children:[
+                {
+                // 使用params传递参数要在path中声明
+                name:'xiangqing',
+                path:'detail/:id/:title', // 占位符声明接收params参数
+                component:Detail
+                }
+            ]
+        },
+        {
+            path:'news',
+            component:News
+        },
+    ]
+}
+```
+
+​	2、传递参数
+
+```html
+<!-- 跳转路由并携带params参数 to字符串写法 -->
+
+<router-link :to="`/home/message/detail/${msg.id}/${msg.title}`">跳转</router-link>
+                
+<!-- 跳转路由并携带params参数 to对象写法-->
+<router-link :to="{
+    // 使用params传递参数的时候要使用name,不能使用path
+    name:'xiangqing',
+    params:{
+        id:msg.id,
+        title:msg.title
+    }
+}">跳转</router-link>
+```
+
+> 注意：路由携带params参数的时候，若使用的to的对象写法，则不能使用path配置项，必须使用name配置！
+
+​	3、接收参数
+
+```html
+$route.params.id
+$route.params.title
+```
+
+### 7、路由的props配置
+
+​	作用：让路由组件更方便的收到参数
+
+```js
+{
+    // 使用params传递参数要在path中声明
+    name:'xiangqing',
+    path:'detail', // 占位符
+    component:Detail,
+    // props的第一种写法,值为对象
+    // 该对象中的所有key-value都会以props的形式传递给Detail组件
+    // 缺点:传递的数据都是死数据
+    props:{
+       a:1,
+       b:'hello',
+    }
+
+    // props的第二种写法,值为布尔值
+    // 若布尔值为真,就会把该路由组件收到的所有params参数,以props的形式传递给Detail组件
+    // 缺点:只能收到params参数
+    props:true
+
+    // props的第三种写法,值为函数
+    props($route){
+    	return {id:$route.query.id,title:$route.query.title}
+    },
+    // 使用ES6语法的结构赋值,将$route种的query中的id和title都拿出来作为参数
+    props({query:{id,title}}){
+        // id:id可以简写成id
+        return {id:id,title}
+   }
+}
 ```
 

@@ -735,7 +735,7 @@ routes:[
 <router-link to="/home/news">News</router-link>
 ```
 
-### 4、路由的query参数
+### 4、路由的query参数（url?参数名=值&参数名=值）
 
 ​	1、传递参数
 
@@ -801,9 +801,10 @@ $route.query.title
 <!-- 简化后，直接通过名字跳转 -->
 <router-link to="{name:hello }" >跳转</router-link>
 
-<!-- 简化写法配合传递参数 -->
-<router-link
+<!-- 简化写法配合传递参数 {对象写法} -->
+<router-link 
 	:to="{
+        // path:'/demo/test/welcome'
      	name:'hello',
          query:{
          	id:666,
@@ -813,7 +814,7 @@ $route.query.title
 >跳转</router-link>
 ```
 
-### 6、路由的params参数
+### 6、路由的params参数 (url/参数值/参数值)
 
 ​	1、配置路由，声明接收params参数
 
@@ -829,6 +830,7 @@ $route.query.title
                 {
                 // 使用params传递参数要在path中声明
                 name:'xiangqing',
+                    
                 path:'detail/:id/:title', // 占位符声明接收params参数
                 component:Detail
                 }
@@ -860,7 +862,7 @@ $route.query.title
 }">跳转</router-link>
 ```
 
-> 注意：路由携带params参数的时候，若使用的to的对象写法，则不能使用path配置项，必须使用name配置！
+> **注意：路由携带params参数的时候，若使用的to的对象写法，则不能使用path配置项，必须使用name配置！**
 
 ​	3、接收参数
 
@@ -875,11 +877,10 @@ $route.params.title
 
 ```js
 {
-    // 使用params传递参数要在path中声明
     name:'xiangqing',
-    path:'detail', // 占位符
+    path:'detail', 
     component:Detail,
-    // props的第一种写法,值为对象
+    // props的第一种写法,值为对象  （基本不哦你还敢）
     // 该对象中的所有key-value都会以props的形式传递给Detail组件
     // 缺点:传递的数据都是死数据
     props:{
@@ -888,7 +889,7 @@ $route.params.title
     }
 
     // props的第二种写法,值为布尔值
-    // 若布尔值为真,就会把该路由组件收到的所有params参数,以props的形式传递给Detail组件
+    // 若布尔值为真,就会把该路由组件收到的所有 params参数 ,以props的形式传递给Detail组件
     // 缺点:只能收到params参数
     props:true
 
@@ -904,3 +905,208 @@ $route.params.title
 }
 ```
 
+### 8、<router-link>的replace属性
+
+​	1、作用：控制路由跳转时操作浏览器历史记录的模式
+
+​	2、浏览器的历史记录有两种写入方式：分别为push和replace，push时追加历史记录，replace时替换当前记录，理由跳转时候默认为push
+
+​	3、如何开启replace模式：`<router-link replace>News</router-link>`
+
+9、编程式路由导航
+
+​	1、作用：不借助<router-link>实现路由跳转，让路由跳转更灵活
+
+​	2、具体编码：
+
+```js
+// $router的两个api
+this.$router.push({
+    name:'xiangqing',
+    query:{
+        id:msg.id,
+        title:msg.title
+    }
+})
+
+this.$router.replace({
+    name:'xiangqing',
+    query:{
+        id:msg.id,
+        title:msg.title
+    }
+})
+
+this.$router.back();
+
+this.$router.forward();
+
+this.$router.go(number)
+```
+
+### 9、编程路由导航
+
+​	1、作用：不借助<router-link>实现路由跳转，让路由跳转更加灵活
+
+​	2、具体编码：
+
+```js
+// $router的两个API
+this.$router.push({
+    name:'xiangqing',
+    query:{
+        id:msg.id,
+        title:msg.title
+    }
+})
+
+this.$router.replace({
+    name:'xiangqing',
+    query:{
+        id:msg.id,
+        title:msg.title
+    }
+})
+
+this.$router.back()
+
+this.$router.forward()
+
+this.$router.go(number) //正往前、负往后
+```
+
+### 10、缓存路由组件
+
+​	1、作用：让不展示的路由组件保持挂载，不被销毁。
+
+​	2、具体编码：
+
+```html
+<!--include中存放的是组件的名称，并非是路由的名称-->
+<keep-alive include="News">
+	<router-view></router-view>
+</keep-alive>
+<!--有多个路由需要缓存的时候-->
+<keep-alive :include="['News','Message']">
+	<router-view></router-view>
+</keep-alive>
+```
+
+### 11、两个新的生命周期钩子
+
+​	1、作用：路由组件所独有的两个钩子，用于捕获路由组件的激活状态。
+
+​	2、具体名字：
+
+​		1、activated路由组件被激活时触发
+
+​		2、deactivated路由组件失活时触发
+
+### 12、路由守卫
+
+​	1、作用：对路由进行权限控制
+
+​	2、分类：全局守卫、独享守卫、组件内守卫  
+
+​	3、全局守卫：
+
+```js
+// 全局前置路由守卫————初始化的时候被调用、每次路由切换之前被调用
+router.beforeEach((to,from,next)=>{
+    // to 目标路由
+    // from  源路由
+    // next 放行路由
+    console.log('前置路由守卫',to,from);
+    // 可以使用path，也可使用name
+    // 当目标路径是/home/message和，目标路由名字是xinwen
+    // if(to.name === 'xinwen' || to.path === '/home/message'){
+
+    // 当配置了meta中的自定义参数之后
+    if(to.meta.isAuth){ //判断是否需要权限
+        if(localStorage.getItem('school') === 'lalala'){
+            next()
+        }
+        else{
+            alert('学校名不对无权访问News和Message')
+        }
+    }
+    else{
+        next()
+    }
+})
+
+// 全局后置路由守卫————初始化的时候被调用、每次路由切换之后被调用
+// 后置路由守卫没有next
+router.afterEach((to,from)=>{
+    // console.log('后置路由守卫',to,from);
+    document.title = to.meta.title || 'Demo'
+})
+```
+
+4、独享路由守卫
+
+```js
+// 独享路由守卫（只有前置，没有后置）
+beforeEnter: (to, from, next) => {
+    if(to.meta.isAuth){ //判断是否需要权限
+        if(localStorage.getItem('school') === 'lalala'){
+            next()
+        }
+        else{
+            alert('学校名不对,无权访问News')
+        }
+    }
+    else{
+        next()
+    }
+}
+```
+
+5、组件内路由守卫
+
+```js
+// 通过路由规则，进入改组件时被调用
+// 进来的时候to的信息是About的
+beforeRouteEnter (to, from, next) {
+    console.log('APP-beforeRouterEnter')
+    if(to.meta.isAuth){ //判断是否需要权限
+        if(localStorage.getItem('school') === 'lalala'){
+            next()
+        }
+        else{
+            alert('学校名不对,无权访问News')
+        }
+    }
+    else{
+        next()
+    }
+},
+// 通过路由规则，离开该组件时被调用
+// 出去的时候from的信息是About的
+beforeRouteLeave (to, from, next) {
+	console.log('APP-beforeRouterLeave');
+	next()
+}
+```
+
+### 13、路由器的两种工作模式
+
+​	1、对于一个url来说， 什么是hash值？——#及其后面的内容就是hash值。
+
+​	2、hash值不会包含在HTTP请求中，即: hash值不会带给服务器。
+
+​	3、hash模式: 
+
+​		1、地址中永远带着#号,不美观。
+
+​		2、若以后将地址通过第三方手机app分享,若app校验严格，则地址会被标记为不合法。
+
+​		3、兼容性较好。
+
+4、history模式:
+
+​	1、地址干净,美观。
+
+​	2、兼容性和hash模式相比略差。
+
+​	3、应用部署上线时需要后端人员支持,解决刷新页面服务端404的问题。
